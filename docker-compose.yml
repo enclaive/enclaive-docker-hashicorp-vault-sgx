@@ -1,0 +1,16 @@
+version: '2'
+
+services:
+
+  vault:
+    image: enclaive/vault-sgx:latest
+    build: .
+    devices:
+      - "/dev/sgx/enclave:/dev/sgx/enclave"
+      - "/dev/sgx/enclave:/dev/sgx_enclave"
+      - "/dev/sgx_provision:/dev/sgx_provision"
+    volumes:
+      - type: volume
+        target: /data
+    ports:
+      - "8200:8200"
