@@ -3,7 +3,7 @@ version: '2'
 services:
 
   vault:
-    image: enclaive/vault-sgx:latest
+    image: enclaive/hashicorp-vault-sgx:latest
     build: .
     devices:
       - "/dev/sgx/enclave:/dev/sgx/enclave"
