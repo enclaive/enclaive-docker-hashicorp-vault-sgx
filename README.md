@@ -148,6 +148,7 @@ docker build -t enclaive/hashicorp-vault-sgx:latest 'https://github.com/enclaive
 ## Release Notes
 
 - manifest uses a hardcoded encryption key for the key directory
+- in production, use key provisioning (see portainerCC project) or trust hashicorp to encrypt the key files
 
 
 <!-- CONTRIBUTING -->
