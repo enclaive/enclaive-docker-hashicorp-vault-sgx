@@ -1,0 +1,19 @@
+version: '2'
+
+services:
+
+  redis:
+    image: enclaive/redis-sgx:k8s
+    devices:
+      - "/dev/sgx/enclave:/dev/sgx/enclave"
+      - "/dev/sgx/enclave:/dev/sgx_enclave"
+      - "/dev/sgx_provision:/dev/sgx_provision"
+    volumes:
+      - type: volume
+        target: /data
+      - type: volume
+        target: /logs
+    ports:
+      - "6379:6379"
+    environment:
+      - ENCLAIVE_SERVER="https://172.17.0.1:8200"

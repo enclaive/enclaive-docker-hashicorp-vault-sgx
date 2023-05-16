@@ -1,0 +1,69 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: enclaive-redis-sgx
+  namespace: default
+  labels:
+    service: enclaive-redis-sgx
+spec:
+  nodeName: node6
+  initContainers:
+    - name: init-vault-sgx
+      image: busybox
+      command: ['sh', '-c', 'until wget -O /dev/null --no-check-certificate -q -T 5 https://enclaive-vault-sgx:8200/v1/sys/health?standbyok=true;do echo "waiting for vault"; sleep 2; done']
+  containers:
+  - name: redis
+    image: docker.io/enclaive/redis-sgx:k8s
+    env:
+      - name: ENCLAIVE_SERVER
+        value: "https://enclaive-vault-sgx:8200"
+    volumeMounts:
+    - mountPath: /etc/sgx_default_qcnl.conf
+      subPath: sgx_default_qcnl.conf
+      name: qcnl-conf
+    - mountPath: /dev/sgx/enclave
+      name: dev-sgx-enclave
+    - mountPath: /dev/sgx_enclave
+      name: dev-sgx-enclave
+    - mountPath: /dev/sgx_provision
+      name: dev-sgx-provision
+    - mountPath: "/data/"
+      name: enclaive-docker-redis-sgx-data
+    - mountPath: "/logs/"
+      name: enclaive-docker-redis-sgx-logs
+    securityContext:
+      privileged: true
+    ports:
+      - containerPort: 6379
+    imagePullPolicy: Always
+  volumes:
+  - name: qcnl-conf
+    configMap:
+      name: enclaive-sgx-pccs-config
+  - name: dev-sgx-provision
+    hostPath:
+      path: /dev/sgx_provision
+  - name: dev-sgx-enclave
+    hostPath:
+      path: /dev/sgx_enclave
+  - name: enclaive-docker-redis-sgx-data
+    hostPath:
+      path: /etc/enclaive/enclaive-docker-redis-sgx/data
+  - name: enclaive-docker-redis-sgx-logs
+    hostPath:
+      path: /etc/enclaive/enclaive-docker-redis-sgx/logs
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: enclaive-redis-sgx
+  namespace: default
+spec:
+  ports:
+  - port: 6379
+    protocol: TCP
+    targetPort: 6379
+  selector:
+    service: enclaive-redis-sgx

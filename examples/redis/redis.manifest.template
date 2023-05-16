@@ -1,0 +1,37 @@
+loader.entrypoint = "file:{{ gramine.libos }}"
+libos.entrypoint = "/app/premain"
+
+loader.argv = [ "/usr/bin/redis-server", "/etc/redis.conf" ]
+
+loader.log_level = "error"
+#loader.log_file = "log.txt"
+
+loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}"
+
+loader.env.ENCLAIVE_NAME = "enclaive-redis-sgx"
+loader.env.ENCLAIVE_SERVER = { passthrough = true }
+
+sys.enable_sigterm_injection = true
+
+fs.root.uri = "file:/"
+fs.start_dir = "/app"
+fs.mounts = [
+    { path = "/tmp",              type = "tmpfs" },
+    { path = "/secrets/tmp",      type = "tmpfs" },
+
+    { path = "/etc",              uri = "file:/etc" },
+    { path = "/usr",              uri = "file:/usr" },
+    { path = "/lib",              uri = "file:{{ gramine.runtimedir() }}" },
+    { path = "{{ arch_libdir }}", uri = "file:{{ arch_libdir }}" },
+
+    { path = "/var/lib/redis",    uri = "file:/data", type = "encrypted", key_name = "data" },
+    { path = "/var/log/redis",    uri = "file:/logs", type = "encrypted", key_name = "logs" },
+]
+
+sgx.enclave_size = "2G"
+sgx.max_threads = 32
+sgx.debug = false
+sgx.allowed_files = [
+  "file:/",
+]
+sgx.remote_attestation = "dcap"

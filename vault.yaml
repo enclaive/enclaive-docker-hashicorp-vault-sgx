@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: enclaive-vault-sgx
+  namespace: default
+  labels:
+    service: enclaive-vault-sgx
+spec:
+  nodeName: node6
+  containers:
+  - name: vault
+    image: docker.io/enclaive/hashicorp-vault-sgx:k8s
+    env:
+      - name: ENCLAIVE_NAMESPACE
+        value: "default"
+    volumeMounts:
+    - mountPath: /etc/sgx_default_qcnl.conf
+      subPath: sgx_default_qcnl.conf
+      name: qcnl-conf
+    - mountPath: /dev/sgx/enclave
+      name: dev-sgx-enclave
+    - mountPath: /dev/sgx_enclave
+      name: dev-sgx-enclave
+    - mountPath: /dev/sgx_provision
+      name: dev-sgx-provision
+    - mountPath: "/data/"
+      name: enclaive-docker-vault-sgx-data
+    securityContext:
+      privileged: true
+    ports:
+      - containerPort: 8200
+    imagePullPolicy: Always
+  volumes:
+  - name: qcnl-conf
+    configMap:
+      name: enclaive-sgx-pccs-config
+  - name: dev-sgx-provision
+    hostPath:
+      path: /dev/sgx_provision
+  - name: dev-sgx-enclave
+    hostPath:
+      path: /dev/sgx_enclave
+  - name: enclaive-docker-vault-sgx-data
+    hostPath:
+      path: /etc/enclaive/enclaive-docker-vault-sgx/data
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: enclaive-vault-sgx
+  namespace: default
+spec:
+  ports:
+  - port: 8200
+    protocol: TCP
+    targetPort: 8200
+  selector:
+    service: enclaive-vault-sgx

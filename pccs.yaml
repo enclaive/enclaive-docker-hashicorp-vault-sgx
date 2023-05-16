@@ -1,0 +1,49 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: enclaive-sgx-pccs
+  namespace: default
+  labels:
+    service: enclaive-sgx-pccs
+spec:
+  nodeName: node6
+  containers:
+  - name: pccs
+    image: docker.io/enclaive/sgx-pccs:latest
+    env:
+      - name: APIKEY
+        value: ""
+    ports:
+      - containerPort: 8081
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: enclaive-sgx-pccs
+  namespace: default
+spec:
+  ports:
+  - port: 443
+    protocol: TCP
+    targetPort: 8081
+  selector:
+    service: enclaive-sgx-pccs
+
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: enclaive-sgx-pccs-config
+  namespace: default
+data:
+  sgx_default_qcnl.conf: |
+    {
+      "pccs_url": "https://enclaive-sgx-pccs/sgx/certification/v4/",
+      "use_secure_cert": false,
+      "retry_times": 6,
+      "retry_delay": 10,
+      "pck_cache_expire_hours": 168
+    }
