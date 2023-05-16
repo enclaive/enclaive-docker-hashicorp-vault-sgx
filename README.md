@@ -7,7 +7,7 @@
         <a href="https://enclaive.io/products">
           <img alt="hashicorp-vault-sgx" height=64px src="https://raw.githubusercontent.com/docker-library/docs/90d4d43bdfccd5cb21e5fd964d32b0074af0f357/vault/logo.svg?sanitize=true">
         </a>
-        <br>Always encrypted <br> Hashicorp Key Vault</td>     
+        <br>Always encrypted <br> Hashicorp Key Vault<br> Kubernetes Edition </td>     
       </td>  
     </tr>
     </table>
