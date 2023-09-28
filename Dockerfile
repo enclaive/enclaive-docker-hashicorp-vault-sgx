@@ -1,4 +1,4 @@
-FROM gramineproject/gramine:v1.3.1
+FROM gramineproject/gramine:v1.5
 
 RUN curl -s -o - https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com focal main" > /etc/apt/sources.list.d/hashicorp.list \
