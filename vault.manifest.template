@@ -6,7 +6,7 @@ loader.entrypoint = "file:{{ gramine.libos }}"
 loader.env.LD_LIBRARY_PATH = "/lib:{{ arch_libdir }}"
 loader.env.HOME = "/root"
 
-loader.log_level = "error"
+loader.log_level = "all"
 #loader.log_file = "log.txt"
 
 fs.root.uri = "file:/"
@@ -21,7 +21,9 @@ sgx.allowed_files = [
   "file:/",
 ]
 
+sys.experimental__enable_flock = true
+
 sgx.max_threads = 16
 sgx.enclave_size = "4G"
-sgx.debug = false
+sgx.debug = true
 sgx.nonpie_binary = true

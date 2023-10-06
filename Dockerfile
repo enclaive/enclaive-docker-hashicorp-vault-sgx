@@ -1,6 +1,9 @@
 FROM gramineproject/gramine:v1.5
 
-RUN curl -s -o - https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg \
+ENV DEBUG=1
+ENV VAULT_DISABLE_MLOCK=1
+
+RUN  curl -s -o - https://apt.releases.hashicorp.com/gpg | gpg --dearmor > /usr/share/keyrings/hashicorp-archive-keyring.gpg \
     && echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com focal main" > /etc/apt/sources.list.d/hashicorp.list \
     && apt-get update \
     && apt-get install -y --no-install-recommends vault \
