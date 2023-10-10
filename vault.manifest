@@ -1,0 +1,62 @@
+[libos]
+entrypoint = "/usr/local/bin/gramine-ratls"
+
+[loader]
+argv = [
+    "gramine-ratls",
+    "/tmp/crt.pem",
+    "/tmp/key.pem",
+    "--",
+    "/usr/bin/vault",
+    "server",
+    "-config",
+    "config.hcl",
+]
+entrypoint = "file:/usr/local/lib/x86_64-linux-gnu/gramine/libsysdb.so"
+
+[loader.env]
+LD_LIBRARY_PATH = "/lib:/lib/x86_64-linux-gnu"
+HOME = "/root"
+
+[fs]
+start_dir = "/app"
+mounts = [
+    { path = "/tmp", type = "tmpfs" },
+    { path = "/data", uri = "file:/data", type = "encrypted", key_name = "default" },
+]
+
+[fs.root]
+uri = "file:/"
+
+[fs.insecure__keys]
+default = "ffeeddccbbaa99887766554433221100"
+
+[sgx]
+allowed_files = [
+    "file:/",
+]
+remote_attestation = "dcap"
+max_threads = 16
+enclave_size = "4G"
+debug = false
+nonpie_binary = true
+trusted_files = []
+isvprodid = 0
+isvsvn = 0
+enable_stats = false
+edmm_enable = false
+use_exinfo = false
+
+[sgx.cpu_features]
+avx = "unspecified"
+avx512 = "unspecified"
+amx = "unspecified"
+mpx = "disabled"
+pkru = "disabled"
+
+[sys]
+experimental__enable_flock = true
+stack_size = "2M"
+
+[sys.brk]
+max_size = "2M"

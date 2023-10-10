@@ -11,8 +11,8 @@ listener "tcp" {
   tls_disable = "true"
 }
 
-storage "raft" {
+storage "file" {
   path    = "/data"
-  node_id = "node0"
 }
+
 
