@@ -21,7 +21,7 @@ sgx.allowed_files = [
   "file:/",
 ]
 
-sgx.thread_num = 16
+sgx.max_threads = 16
 sgx.enclave_size = "4G"
 sgx.debug = false
 sgx.nonpie_binary = true
