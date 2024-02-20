@@ -30,6 +30,13 @@
  
 </div>
 
+## Note
+In addition to Vault we recommend the installation of the remote attestation plug-in
+```
+git clone https://github.com/enclaive/enclaive-vault-ra-sgx-plugin
+```
+
+
 <!-- TL;DR --> 
 ## TL;DR
 
